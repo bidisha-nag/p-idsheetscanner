@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&idscanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("/static/background_image.jpg"); /* Background image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .navbar {
+            background-color: #003F87; /* Dark blue navbar */
+            color: #ffffff; /* White text */
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar img {
+            height: 50px; /* Adjust height as needed */
+            margin-left: 10px; /* Add space to the left of the logo */
+        }
+
+        .login-form {
+            margin-right: 10px; /* Add space to the right of the login form */
+            display: flex;
+            align-items: center;
+        }
+
+        .login-form input[type="text"],
+        .login-form input[type="password"],
+        .login-form button {
+            padding: 5px;
+            margin-right: 5px;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8); /* White background with opacity */
+            border-radius: 10px;
+            margin: 50px auto;
+            max-width: 800px;
+        }
+
+        .button {
+            background-color: #003F87; /* Dark blue button */
+            color: #ffffff; /* White text */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #002b5e; /* Darker blue on hover */
+        }
+
+        .footer {
+            background-color: #003F87; /* Dark blue footer */
+            color: #ffffff; /* White text */
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <img src="static\logo2.png" alt="Logo">
+            <form class="login-form" action="/login" method="POST">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username">
+                <input type="password" name="password" placeholder="Password">
+                <button type="submit">Login</button>
+            </form>
+    </header>
+
+    <main class="content">
+        <h2>About</h2>
+        <p>
+            The system is a user-friendly web application designed to streamline the processing of PDF documents by automatically detecting and highlighting predefined symbols within them. Users can upload PDF files and a corresponding zip archive containing symbol images. Upon processing, the system identifies matches between the symbols and the content of the PDF, displaying the results efficiently. With its intuitive interface and advanced recognition algorithms, it enhances productivity and accuracy in tasks such as content analysis, data extraction, and pattern recognition, catering to various industries and research fields requiring efficient document analysis and information extraction capabilities.
+        </p>
+        <br/>
+        <p>Please login to try it.</p>
+    </main>
+
+    <footer class="footer">
+        &copy; 2024 Simplex Services. All rights reserved.
+    </footer>
+</body>
+</html>

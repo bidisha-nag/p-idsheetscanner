@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('/static/background_image.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: rgba(0, 63, 135, 1); /* Semi-transparent blue */
+            color: #ffffff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header img {
+            height: 50px;
+        }
+
+        header p {
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .logout-button {
+            background-color: white;
+            color: #003F87;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .logout-button:hover {
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 80%;
+            margin: auto;
+            margin-top: 80px;
+            margin-bottom: 50px;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            padding: 20px;
+            border-radius: 10px;
+            width: 45%;
+            margin-left: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #003F87;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #002b5e;
+        }
+
+        /* Style for the alert messages */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        /* Success message style */
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+
+        /* Error message style */
+        .alert-error {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        /* Warning message style */
+        .alert-warning {
+            color: #8a6d3b;
+            background-color: #fcf8e3;
+            border-color: #faebcc;
+        }
+
+        .download-button {
+            background-color: #003F87;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            text-decoration: none; /* Remove underline */
+        }
+        
+        .download-button:hover {
+            background-color: #002b5e;
+        }
+
+        .about {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            padding: 20px;
+            border-radius: 10px;
+            width: 45%;
+            margin-left: 10px;
+        }
+
+        .about h2 {
+            text-align: center;
+        }
+
+        .about p {
+            text-align: justify;
+        }
+
+        .footer {
+            background-color: rgba(0, 63, 135,1); /* Semi-transparent blue */
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            margin-top: auto;
+        }
+
+        /* Loader styles */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Ensure it's on top of other content */
+            display: none; /* Initially hide the loader */
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite; /* Spin animation */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+ <!-- Loader container -->
+ <div class="loader-container" id="loaderContainer" style="{% if loader_visible %} display: flex; {% else %} display: none; {% endif %}">
+    <div class="loader"></div>
+</div>
+
+<header>
+    <img src="/static/logo2.png" alt="Logo">
+    <p>Welcome, {{ request.user }}</p>
+    <button class="logout-button"><a href="/logout" style="text-decoration: none; color: #003F87;">Log out</a></button>
+</header>
+
+<div class="container">
+    <div class="form-container">
+        <form id="generateForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="pdf">Upload PDF:</label>
+            <input type="file" name="pdf" accept="application/pdf"><br><br>
+            <label for="symbol_folder">Upload Symbol Folder:</label>
+            <input type="file" name="symbol_folder" directory webkitdirectory mozdirectory><br><br>
+            <button type="button" onclick="submitForm()">Generate Result</button>
+        </form>
+        <br>
+        <div id="successMessage" style="display: none;">Processing done. Unique matches: <span id="uniqueMatches"></span>, Processing time: <span id="processingTime"></span> seconds.</div>
+    </div>
+    <div class="about">
+        <h2>HOW TO USE</h2>
+        <p>Upload PDF: On the main page, click on the "Upload PDF" button and select the PDF file containing the content you want to process.</p>
+        <p>Upload Symbol Zip: Next, click on the "Upload Symbol Zip" button and select a zip file containing the symbol images you want to use for matching.</p>
+        <p>Generate Result: Once both files are uploaded, click on the "Generate Result" button to start the processing.</p>
+        <p>Wait for Processing: The system will start processing the uploaded files. Wait for the processing to complete.</p>
+        <p>View Results: After processing is complete, you will see a success message indicating that the processing is done.</p>
+        <p>Download Result: The output image will be saved in your downloads.</p>
+        <p>Logout: To logout, click on the "Log out" button at the top right corner of the page.</p>
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2024 Simplex Services. All rights reserved.
+</footer>
+
+<script>
+    function submitForm() {
+        var form = document.getElementById('generateForm');
+        var formData = new FormData(form);
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    // Hide loader
+                    document.getElementById('loaderContainer').style.display = 'none';
+                    // Download the image
+                    downloadFile(response.output_image_url);
+                    // Update success message
+                    document.getElementById('uniqueMatches').innerText = response.unique_matches_count;
+                    document.getElementById('processingTime').innerText = response.processing_time.toFixed(2);
+                    document.getElementById('successMessage').style.display = 'block';
+                } else {
+                    var errorMessage = 'Error processing files. Please try again.';
+                    if (xhr.responseText) {
+                        errorMessage = JSON.parse(xhr.responseText).error;
+                    }
+                    alert(errorMessage);
+                    // Hide loader
+                    document.getElementById('loaderContainer').style.display = 'none';
+                }
+            }
+        };
+        xhr.open('POST', '/generate_result', true);
+        xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        xhr.send(formData);
+
+        // Show loader
+        document.getElementById('loaderContainer').style.display = 'flex';
+    }
+
+    function downloadFile(url) {
+        var link = document.createElement('a');
+        link.href = url;
+        link.download = 'output_image.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+
+</body>
+</html>
